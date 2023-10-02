@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modernized Page</title>
+<style>
+  /* Define CSS styles for highlighted text */
+  .highlight {
+    background-color: yellow;
+  }
+
+  /* CSS for the toggle buttons */
+  .toggle-button {
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  /* CSS to hide the original sentences initially */
+  .hidden {
+    display: none;
+  }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0 100px; /* Add margin to the left and right sides */
+      padding: 0;
+    }
+
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<h1>Original Text</h1>
+
+<h2>Feedbacks</h2>
+
+<button class="toggle-button" onclick="toggleHighlight('problem1')">Lack of clarity and wordiness</button>
+<br>
+<p> <em>Revised: "Government intervention, an economic concept, refers to regulatory actions taken by the government to influence market decisions made by consumers and producers."
+</em> </p>
+<p> Explanation: The original sentence is unclear and wordy. The revision simplifies and clarifies the definition of government intervention.
+<br><br>
+
+
+<button class="toggle-button" onclick="toggleHighlight('problem2')">Awkward phrasing and subject-verb agreement</button>
+<br>
+<p> <em>    "One common way to intervene is by implementing policies."
+
+</em> </p>
+<p> Explanation: The original sentence has awkward phrasing and incorrect subject-verb agreement. The revised sentence is more concise and grammatically correct."
+
+<br><br>
+
+
+<button class="toggle-button" onclick="toggleHighlight('problem3')">Fragmented clauses and unclear structure</button>
+<br>
+<p> <em>        "Policies are typically aimed at promoting societal equity and improving efficiency, but they can inadvertently lead to legal workarounds in other industries.",
+
+
+</em> </p>
+<p> Explanation:     "The original sentence suffers from fragmented clauses and unclear structure. The revision combines and rephrases the sentences for better readability."
+
+
+<br><br>
+
+
+<button class="toggle-button" onclick="toggleHighlight('problem4')">Lack of coherence and disjointed ideas</button>
+<br>
+<p> <em>        "An example of such a policy pertains to sewage disposal, with the aim of reducing water pollution, which aligns with Social Development Goals.",
+
+
+</em> </p>
+<p> Explanation:     "The original sentences lacked coherence and had disjointed ideas. The revision connects the ideas and improves flow."
+
+
+<br><br>
+
+
+<button class="toggle-button" onclick="toggleHighlight('problem5')">Confusing and grammatically incorrect</button>
+<p> <em>        "Looking at this graph, we can observe that heavy industries aim to reduce product output due to non-price supply determinants influenced by government policies."
+
+
+</em> </p>
+<p> Explanation:     "The original sentence was confusing and grammatically incorrect. The revision clarifies the meaning and corrects grammar."
+
+
+<br><br>
+
+<script>
+  function toggleHighlight(problemId) {
+    var problemElement = document.getElementById(problemId);
+    problemElement.classList.toggle("highlight");
+  }
+</script>
+</body>
+</html>

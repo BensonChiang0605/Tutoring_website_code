@@ -10,23 +10,48 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
+    <style>
+        body {
+            background-color: #000000; /* Black background color */
+            color: #ffffff; /* White text color */
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: #ffffff !important; /* White text color for navbar links */
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .navbar-dark .navbar-toggler-icon {
+            background-color: #ffffff; /* White color for the navbar toggler icon */
+        }
+
+        .navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover {
+            color: #ffffff !important; /* White text color for hover or focus */
+        }
+
+        .navbar-dark.bg-steel {
+            background-color: #5015BD !important; /* Your specified color */
+        }
+    </style>
+
     {% if title %}
         <title>CheckMate - {{ title }}</title>
     {% else %}
         <title>CheckMate</title>
     {% endif %}
+
 </head>
 <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Benson's AI Essay CheckMate</a>
+          <a class="navbar-brand mr-4" href="/" style="font-family: 'Poppins', sans-serif;">Benson's AI Essay CheckMate</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+              <a class="nav-item nav-link" href="{{ url_for('prototype_homepage') }}">Home</a>
               <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
             </div>
             <!-- Navbar Right Side -->
@@ -47,7 +72,7 @@
     </header>
     <main role="main" class="container">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}
@@ -59,22 +84,8 @@
           {% endwith %}
           {% block content %}{% endblock %}
         </div>
-        <div class="col-md-4">
-          <div class="content-section">
-            <h3>Our Sidebar</h3>
-            <p class='text-muted'>You can put any information here you'd like.
-              <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
-              </ul>
-            </p>
-          </div>
-        </div>
       </div>
     </main>
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

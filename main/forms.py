@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, MultipleFileField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_wtf.csrf import CSRFProtect
 from main.models import User
 
 
@@ -61,6 +62,6 @@ class PostForm(FlaskForm):
     submit = SubmitField('Post')
 
 class ScanImageForm(FlaskForm):
-    prompt = StringField('Enter the essay question', validators=[DataRequired()])
-    picture = FileField('Upload your essay response', validators=[FileAllowed(['jpg','png'])])
+    prompt = TextAreaField('Enter the essay question', validators=[DataRequired()])
+    picture = MultipleFileField('Upload your essay response', validators=[FileAllowed(['jpg','png'])])
     submit = SubmitField('Submit')

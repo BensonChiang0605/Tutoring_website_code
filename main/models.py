@@ -1,6 +1,7 @@
 from datetime import datetime
 from main import db, login_manager
 from flask_login import UserMixin
+from sqlalchemy.types import ARRAY
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -28,6 +29,12 @@ class Post(db.Model, UserMixin):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # Grammar feedback
+    grammar_feedback = db.Column(db.Text, nullable=False)
+    # problem_summaries = db.Column(db.ARRAY(db.String), nullable=False)
+    # original_sentences = db.Column(db.ARRAY(db.String), nullable=False)
+    # revised_sentences = db.Column(db.ARRAY(db.String), nullable=False)
+    # explanations = db.Column(db.ARRAY(db.String), nullable=False)
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
