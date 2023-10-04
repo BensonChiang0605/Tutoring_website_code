@@ -1,5 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
+    <style>
+        .content-section {
+            background-color: black;
+            color: white;
+            /* Add any other styles you need for the content-section */
+        }
+
+        /* Add styles for the form, labels, inputs, etc. */
+        .form-group,
+        .form-control-label,
+        .form-control,
+        .form-check-input,
+        .form-check-label,
+        .btn,
+        .text-muted,
+        a {
+            color: white !important;
+        }
+
+        /* Add styles for invalid feedback if needed */
+        .invalid-feedback {
+            color: white;
+        }
+    </style>
     <div class="content-section">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
@@ -39,7 +63,7 @@
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
                 <small class="text-muted ml-2">
-                <a href="{{ url_for('reset_request') }}">Forgot Password?</a>
+                <a>Forgot Password?</a>
                 </small>
             </div>
         </form>
