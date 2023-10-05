@@ -4,11 +4,13 @@ import requests
 import os
 import openai
 import re
+import base64
+from requests.exceptions import RequestException, HTTPError, ConnectionError, Timeout
 
 
 def scan_image(picture_file):
     headers = {
-        "x-api-key": os.environ.get("x-api-key")
+        "x-api-key": os.environ.get("x_api_key")
     }
 
     payload = {
@@ -18,17 +20,31 @@ def scan_image(picture_file):
         "configuration": {}
     }
 
-    response = requests.post("https://inference.plugger.ai/", headers=headers, json=payload)
+    try:
+        response = requests.post("https://inference.plugger.ai/", headers=headers, json=payload)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
 
-    result = response.json()
-    text_in_image = result["data"][0]["text"]
-    return text_in_image
+        result = response.json()
+        text_in_image = result["data"][0]["text"]
+        return text_in_image
+
+    except (RequestException, HTTPError, ConnectionError, Timeout) as e:
+        print(f"An error occurred: {e}")
+        print(f"Response content: {response.content if 'response' in locals() else None}")
+        return None  # or handle the error in a way that makes sense for your application
+
+    #response = requests.post("https://inference.plugger.ai/", headers=headers, json=payload)
+
+    # result = response.json()
+    # text_in_image = result["data"][0]["text"]
+    # return text_in_image
 
 def correct_grammar(scanned_texts, essay_question):
-    openai.api_key = os.environ.get("open-api-key")
+    openai.api_key = os.environ.get('open_api_key')
+
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
         messages=[
             {
                 "role": "system",
@@ -50,10 +66,10 @@ def correct_grammar(scanned_texts, essay_question):
     return assistant_reply
 
 def correct_spelling(scanned_texts, essay_question):
-    openai.api_key = os.environ.get("open-api-key")
+    openai.api_key = os.environ.get('open_api_key')
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
         messages=[
             {
                 "role": "user",
@@ -74,10 +90,10 @@ def correct_spelling(scanned_texts, essay_question):
     return assistant_reply
 
 def gpt_grammar_feedback(spell_checked_essay):
-    openai.api_key = os.environ.get("open-api-key")
+    openai.api_key = os.environ.get('open_api_key')
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
         messages=[
             {
                 "role": "user",

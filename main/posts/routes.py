@@ -4,6 +4,7 @@ from main import db
 from main.models import Post
 from main.posts.forms import PostForm, ScanImageForm
 from main.posts.utils import scan_image, gpt_grammar_feedback, correct_spelling, add_span_tags_to_text
+from main.users.utils import save_picture
 import json
 import cameralyze
 

@@ -1,11 +1,20 @@
+:root {
+  --primary-color: #5015BD;
+  --lighter-shade: #7B4AD9;
+  --darker-shade: #340E84;
+  --contrasting-color: #FFA500;
+  --neutral-gray: #888888;
+}
+
 body {
-  background: #fafafa;
-  color: #333333;
+  background: #ffffff;
+  color: #fafafa;
   margin-top: 5rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #444444;
+  color: var(--contrasting-color);
+  font-family: 'Poppins', sans-serif;
 }
 
 .bg-steel {
@@ -24,16 +33,28 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
+.btn-outline-info {
+    color: var(--contrasting-color);
+    border-color: var(--contrasting-color);
+}
+
+.btn-outline-info:hover {
+    color: #fff;  /* Change to the desired text color on hover */
+    background-color: var(--contrasting-color);
+    border-color: var(--contrasting-color);
+}
+
 .content-section {
-  background: #ffffff;
+  background: #000000;
   padding: 10px 20px;
-  border: 1px solid #dddddd;
+  border: 1px solid #000000;
   border-radius: 3px;
   margin-bottom: 20px;
 }
 
 .article-title {
-  color: #444444;
+  color: #fafafa;
+  font-family: 'Poppins', sans-serif;
 }
 
 a.article-title:hover {

@@ -32,6 +32,14 @@
         .navbar-dark.bg-steel {
             background-color: #5015BD !important; /* Your specified color */
         }
+
+        .container {
+            border: none !important; /* Remove borders */
+            .container {
+            padding: 0;
+            margin: 0;
+        }
+
     </style>
 
     {% if title %}
@@ -52,12 +60,11 @@
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="{{ url_for('posts.prototype_homepage') }}">Home</a>
-              <a class="nav-item nav-link" href="{{ url_for('main_main.about') }}">About</a>
+              <a class="nav-item nav-link" href="https://benson0605.editorx.io/econplay">About</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
                 {% if current_user.is_authenticated %}
-                    <a class="nav-item nav-link" href="{{ url_for('posts.new_post') }}">New Post</a>
                     <a class="nav-item nav-link" href="{{ url_for('posts.submit_essay') }}">Submit Essay</a>
                     <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Welcome {{ current_user.username }}!</a>
                     <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
@@ -72,7 +79,7 @@
     </header>
     <main role="main" class="container">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-9 mx-auto">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}

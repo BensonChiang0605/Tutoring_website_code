@@ -5,6 +5,7 @@ from main.models import User, Post
 from main.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from main.users.utils import save_picture
 
+
 users = Blueprint('users', __name__)
 
 @users.route("/register", methods=['GET', 'POST'])
