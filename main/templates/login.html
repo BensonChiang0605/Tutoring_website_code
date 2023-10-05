@@ -10,7 +10,6 @@
         /* Add styles for the form, labels, inputs, etc. */
         .form-group,
         .form-control-label,
-        .form-control,
         .form-check-input,
         .form-check-label,
         .btn,
@@ -23,7 +22,16 @@
         .invalid-feedback {
             color: white;
         }
+
+        .form-group {
+            color: black;
+        }
+
+        .form-control {
+            color: black;
+        }
     </style>
+
     <div class="content-section">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
