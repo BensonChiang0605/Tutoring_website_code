@@ -10,14 +10,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def scan_image(picture_file):
+def scan_image(file_content):
     headers = {
         "x-api-key": os.environ.get("x_api_key")
     }
 
     payload = {
         "itemUuid": "4eef90ef-00df-42a2-b152-69109a9a8602",
-        "image": jpg_to_base64(picture_file),
+        "image": file_content_to_base64(file_content),
         "rawResponse": True,
         "configuration": {}
     }
@@ -120,13 +120,8 @@ def gpt_grammar_feedback(spell_checked_essay):
     assistant_reply = response['choices'][0]['message']['content']
     return assistant_reply
 
-def jpg_to_base64(image_path):
-    with open(image_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read())
-
-    # Convert the bytes-like object to a string
-    image_string = encoded_string.decode("utf-8")
-    return image_string
+def file_content_to_base64(file_content):
+    return base64.b64encode(file_content).decode('utf-8')
 
 def add_span_tags_to_text(text, sentences_to_tag):
     # Split the text into sentences using regular expressions

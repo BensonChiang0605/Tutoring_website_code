@@ -61,18 +61,15 @@ def delete_post(post_id):
 @posts.route("/submit_essay", methods=['GET', 'POST'])
 @login_required
 def submit_essay():
-    # form = ScanImageForm()
-    # if form.validate_on_submit():
-    #     if form.picture.data:
-    #         picture_file = save_picture(form.picture.data)
-    #         scanned_text = scan_image(f"main/static/profile_pics/{picture_file}")   # could be improved by not skip the step where we save the image, we just read it.
+
+    # could be improved by not skip the step where we save the image, we just read it.
     form = ScanImageForm()
     if form.validate_on_submit():
         scanned_texts = []  # Store scanned texts for all uploaded files
         for file in form.picture.data:
             if file:
-                picture_file = save_picture(file)
-                scanned_text = scan_image(f"main/static/profile_pics/{picture_file}")
+                file_content = file.read()
+                scanned_text = scan_image(file_content)
                 scanned_texts.append(scanned_text)
         spell_checked_essay = correct_spelling(''.join(scanned_texts), form.prompt)
         # load grammar feedback to of this post into the this post model
