@@ -6,6 +6,8 @@ import openai
 import re
 import base64
 from requests.exceptions import RequestException, HTTPError, ConnectionError, Timeout
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def scan_image(picture_file):
