@@ -90,7 +90,7 @@ def prototype_homepage():
     return render_template('prototype_homepage.html', title='prototype_homepage', image_file=image_file)
 
 @posts.route("/grammar_feedback/<int:post_id>", methods=['GET', 'POST'])
-def grammar_correction_prototype(post_id):
+def grammar_feedback(post_id):
     post = Post.query.get_or_404(post_id)
     json_data = json.loads(post.grammar_feedback)
     highlightable_essay = add_span_tags_to_text(post.content, list(json_data["original_sentences"]))
