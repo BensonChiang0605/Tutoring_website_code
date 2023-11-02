@@ -6,7 +6,6 @@ from main.posts.forms import PostForm, ScanImageForm, is_empty_field
 from main.posts.utils import scan_image, gpt_grammar_feedback, correct_spelling, add_span_tags_to_text, def_feedback, explanation_feedback, diagram_feedback, extract_table_from_explanation_feedback, example_feedback
 from main.users.utils import save_picture
 import json
-import cameralyze
 
 posts = Blueprint('posts', __name__)
 
