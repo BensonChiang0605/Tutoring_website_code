@@ -23,7 +23,9 @@ mail = Mail(app)
 from main.users.routes import users
 from main.posts.routes import posts
 from main.main_main.routes import main_main
+from main.resources.routes import resources
 
 app.register_blueprint(users)
 app.register_blueprint(posts)
 app.register_blueprint(main_main)
+app.register_blueprint(resources)

@@ -21,6 +21,20 @@
                 </div>
 
                 <div class="form-group">
+                    {{ form.essay_response.label(class="form-control-label", style="color: #ffffff;") }}
+                    {% if form.essay_response.errors %}
+                        {{ form.essay_response(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.essay_response.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.essay_response(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
                     {{ form.picture.label(style="color: #ffffff;") }}
                     {{ form.picture(class="form-control-file") }}
                     {% if form.picture.errors %}
@@ -29,6 +43,7 @@
                         {% endfor %}
                     {% endif %}
                 </div>
+
 
             </fieldset>
             <div class="form-group">

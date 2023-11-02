@@ -20,6 +20,7 @@
             <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModalLong">Delete</button>
           </div>
         {% endif %}
+        <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('posts.econ_feedback_page', post_id=post.id) }}">Econ Feedback</a>
       </div>
 
 

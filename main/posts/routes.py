@@ -2,8 +2,8 @@ from flask import render_template, request, redirect, url_for, flash, abort, Blu
 from flask_login import current_user, login_required
 from main import db
 from main.models import Post
-from main.posts.forms import PostForm, ScanImageForm
-from main.posts.utils import scan_image, gpt_grammar_feedback, correct_spelling, add_span_tags_to_text, econ_feedback
+from main.posts.forms import PostForm, ScanImageForm, is_empty_field
+from main.posts.utils import scan_image, gpt_grammar_feedback, correct_spelling, add_span_tags_to_text, def_feedback, explanation_feedback, diagram_feedback, extract_table_from_explanation_feedback, example_feedback
 from main.users.utils import save_picture
 import json
 import cameralyze
@@ -66,17 +66,24 @@ def submit_essay():
     form = ScanImageForm()
     if form.validate_on_submit():
         scanned_texts = []  # Store scanned texts for all uploaded files
-        for file in form.picture.data:
-            if file:
-                file_content = file.read()
+        if is_empty_field(form.picture.data):
+            spell_checked_essay = form.essay_response.data
 
-                scanned_text = scan_image(file_content)
-                scanned_texts.append(scanned_text)
-        spell_checked_essay = correct_spelling(''.join(scanned_texts), form.prompt)
+        else:
+            print(form.picture.data)
+            for file in form.picture.data:
+                if file:
+                    file_content = file.read()
+
+                    scanned_text = scan_image(file_content)
+                    scanned_texts.append(scanned_text)
+            spell_checked_essay = correct_spelling(''.join(scanned_texts), form.prompt)
+
         # load grammar feedback to of this post into the this post model
+        explanation = explanation_feedback(spell_checked_essay, form.prompt)
         post = Post(title=f"{current_user.username} response to '{form.prompt.data}'",\
                     content=spell_checked_essay, author=current_user, grammar_feedback=gpt_grammar_feedback(spell_checked_essay),\
-                    econ_feedback=econ_feedback(spell_checked_essay, form.prompt))
+                    econ_feedback=def_feedback(spell_checked_essay, form.prompt) + explanation + diagram_feedback(extract_table_from_explanation_feedback(explanation), form.prompt) + example_feedback(spell_checked_essay)) # plus other section feedbacks, add later
         db.session.add(post)
         db.session.commit()
         flash('Post created!', 'success')

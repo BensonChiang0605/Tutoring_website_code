@@ -20,11 +20,12 @@
             <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModalLong">Delete</button>
           </div>
         {% endif %}
+        <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('posts.grammar_feedback', post_id=post.id) }}">Grammar Feedback</a>
+
       </div>
 
       {{ econ_feedback | safe }}
 
-      <h2>Feedbacks</h2>
     </div>
   </article>
 

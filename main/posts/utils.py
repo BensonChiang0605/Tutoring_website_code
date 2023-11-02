@@ -99,11 +99,11 @@ def gpt_grammar_feedback(spell_checked_essay):
         messages=[
             {
                 "role": "user",
-                "content": "Identify grammar mistakes and poorly constructed sentences in this text.  First extract all sections where there is an issue, then summarise each issue you see, then make edits to improve the identified mistake, and finally explain your edits. Output your response in JSON.\n\nText: The circular flow diagram is a diagram that shows the relationship between households, firms, government, financial markets, and other countries in a market, how money flows in the system, and how government, financial markets, and other countries are involved in this closed system. The simple circular flow diagram only focused on the money flows between households and firms, which is a closed system. \nHowever, money will not always be in the system for households and firms. A portion of the money within the system will flow out to the government, financial markets, and other countries, which forms the complex circular flow diagram and shows how these injections and leakages work in the closed system. The government creates leakages through taxes, and injections through government spending. \nIn this case, households receive factor payments and dividends, including wages, profit, interest, and rent; meanwhile, they provide factors of production, which are land, labor, capital, and entrepreneurship, to firms. Furthermore, firms provide goods and services to households; at the same time, the expenditure on the goods and services will return to firms.\nFor the government, the leakage will be the taxes that are paid by households and firms four times a year, and this money will flow out of the system. For example, there are income taxes, sales taxes, etc. As a Taiwanese, Taiwan’s income taxes increase from 5% to 12% to 20% to 30% to 40% while the income increases; moreover, the sale tax in Taiwan is 5%. \nBesides, the money that is added to the system, which is also known as the injection, will be government spending and transfers. Due to the circular flow diagram, these taxes will be used for government spending and transfers. For instance, the government will use this money to build or renew infrastructure, pay for health care and education for citizens, provide military funds, etc. According to data, the Taiwan government used 6.6% of the GDP for health care. These examples illustrate how the government provides injections and leakages to involve the circular flow diagram."
+                "content": "Go through every sentence in this essay, identify sentences that contain grammatical mistakes that significantly affect the essay’s readability. For each of these sentences:\nSummarise the grammatical mistake\nRevise and fix the sentence\nExplain the revision in detail, clearly explain which words were replaced and edited and why\n\nEssay: The circular flow diagram is a diagram that shows the relationship between households, firms, government, financial markets, and other countries in a market, how money flows in the system, and how government, financial markets, and other countries are involved in this closed system. The simple circular flow diagram only focused on the money flows between households and firms, which is a closed system. \nHowever, money will not always be in the system for households and firms. A portion of the money within the system will flow out to the government, financial markets, and other countries, which forms the complex circular flow diagram and shows how these injections and leakages work in the closed system. The government creates leakages through taxes, and injections through government spending. \nIn this case, households receive factor payments and dividends, including wages, profit, interest, and rent; meanwhile, they provide factors of production, which are land, labor, capital, and entrepreneurship, to firms. Furthermore, firms provide goods and services to households; at the same time, the expenditure on the goods and services will return to firms.\nFor the government, the leakage will be the taxes that are paid by households and firms four times a year, and this money will flow out of the system. For example, there are income taxes, sales taxes, etc. As a Taiwanese, Taiwan’s income taxes increase from 5% to 12% to 20% to 30% to 40% while the income increases; moreover, the sale tax in Taiwan is 5%. \nBesides, the money that is added to the system, which is also known as the injection, will be government spending and transfers. Due to the circular flow diagram, these taxes will be used for government spending and transfers. For instance, the government will use this money to build or renew infrastructure, pay for health care and education for citizens, provide military funds, etc. According to data, the Taiwan government used 6.6% of the GDP for health care. These examples illustrate how the government provides injections and leakages to involve the circular flow diagram."
             },
             {
                 "role": "assistant",
-                "content": """{\n    \"problem_summaries\": [\n        \"Lack of parallelism in the list of items.\",\n        \"Lack of clarity and wordiness.\"\n    ],\n    \"original_sentences\": [\n        \"The circular flow diagram shows the relationship between households, firms, government, financial markets, and other countries in a market, how money flows in the system, and how government, financial markets, and other countries are involved in this closed system.\",\n        \"The simple circular flow diagram only focused on the money flows between households and firms, which is a closed system.\"\n    ],\n    \"revised_sentences\": [\n        \"The circular flow diagram illustrates the relationships among households, firms, government, financial markets, and other countries in a market, the flow of money in the system, and the involvement of government, financial markets, and other countries in this closed system.\",\n        \"The basic circular flow diagram solely focuses on the money exchange between households and firms, creating a closed system\"\n    ],\n    \"explanations\": [\n        \"I revised the sentence to maintain parallelism by listing all items in the same grammatical form.\",\n        \"I rephrased the sentence to make it clearer and more concise.\"\n}"""
+                 "content": """{\n    \"problem_summaries\": [\n        \"Lack of parallelism in the list of items.\",\n        \"Verb tense and pluralization error\"\n    ],\n    \"original_sentences\": [\n        \"The circular flow diagram shows the relationship between households, firms, government, financial markets, and other countries in a market, how money flows in the system, and how government, financial markets, and other countries are involved in this closed system.\",\n        \"This graph is show the combination of producing consumer good and capital good.\"\n    ],\n    \"revised_sentences\": [\n        \"The circular flow diagram illustrates the relationships among households, firms, government, financial markets, and other countries in a market, the flow of money in the system, and the involvement of government, financial markets, and other countries in this closed system.\",\n        \"This graph shows the combination of producing consumer goods and capital goods.\"\n    ],\n    \"explanations\": [\n        \"Revised for parallelism, enhancing clarity and coherence by uniformly structuring the listed elements in the sentence.\",\n        \" The revised sentence corrects verb tense ('shows' instead of 'is show') and pluralizes 'consumer goods' and 'capital goods' for grammatical accuracy and clarity.\"\n}"""
 
             },
             {
@@ -123,9 +123,30 @@ def gpt_grammar_feedback(spell_checked_essay):
 def file_content_to_base64(file_content):
     return base64.b64encode(file_content).decode('utf-8')
 
+# def add_span_tags_to_text(text, sentences_to_tag):
+#     # Split the text into sentences using regular expressions
+#     sentences = re.split(r'(?<=[.!?])\s+', text)    # this fucks up the paragraph structure of the text
+#
+#     # Initialize a variable to store the result
+#     result = ""
+#
+#     # Initialize a unique ID counter
+#     unique_id = 1
+#
+#     for sentence in sentences:
+#         # Check if the current sentence is in the list
+#         if sentence in sentences_to_tag:
+#             # Add a <span> tag with a unique ID
+#             result += f'<span id="problem-{unique_id}">{sentence}</span> '
+#             unique_id += 1
+#         else:
+#             result += sentence + ' '
+#
+#     return result.strip()
+
 def add_span_tags_to_text(text, sentences_to_tag):
-    # Split the text into sentences using regular expressions
-    sentences = re.split(r'(?<=[.!?])\s+', text)
+    # Split the text into paragraphs
+    paragraphs = text.split('\r\n\r\n')
 
     # Initialize a variable to store the result
     result = ""
@@ -133,18 +154,66 @@ def add_span_tags_to_text(text, sentences_to_tag):
     # Initialize a unique ID counter
     unique_id = 1
 
-    for sentence in sentences:
-        # Check if the current sentence is in the list
-        if sentence in sentences_to_tag:
-            # Add a <span> tag with a unique ID
-            result += f'<span id="problem-{unique_id}">{sentence}</span> '
-            unique_id += 1
-        else:
-            result += sentence + ' '
+    for paragraph in paragraphs:
+        # Split the paragraph into sentences
+        sentences = re.split(r'(?<=[.!?])\s+', paragraph)
 
-    return result.strip()
+        # Initialize a variable to store the processed paragraph
+        processed_paragraph = ""
 
-def econ_feedback(scanned_texts, essay_question):
+        for sentence in sentences:
+            # Check if the current sentence is in the list
+            if sentence in sentences_to_tag:
+                # Add a <span> tag with a unique ID
+                processed_paragraph += f'<span id="problem-{unique_id}">{sentence}</span> '
+                unique_id += 1
+            else:
+                processed_paragraph += sentence + ' '
+
+        # Append the processed paragraph to the result
+        result += processed_paragraph + '\n\n'
+
+    return result
+
+# def econ_feedback(scanned_texts, essay_question):
+#     openai.api_key = os.environ.get('open_api_key')
+#
+#
+#     response = openai.ChatCompletion.create(
+#         model="gpt-4",
+#         messages=[
+#             {
+#                 "role": "system",
+#                 "content": f"You'll receive a text generated by an image-to-text app in response to the question \
+#                 '{essay_question}'. A good essay response should meet the characteristics below: Relevant economic\
+#                  terms are clearly defined. Relevant economic theory is clearly explained and applied. \
+#                  Where appropriate, diagrams are included and applied effectively. Where appropriate, examples are \
+#                  used effectively. There are no significant errors. 'Economic terms' are microeconomic and \
+#                  macroeconomic terms such as demand, supply, market equilibrium, aggregate demand, aggregate supply, \
+#                  etc. \nEssay response: {scanned_texts} \nGive detailed feedback on: 1. How well relevant economics terms \
+#                  are defined. Are any definitions unclear? \n2. How well are relevant economic theories explained. \n\
+#                  3. How well the student utilised diagrams to support his essay. Since you are not able to draw diagrams, \
+#                  describe the diagrams you would draw in brackets. \n4. How well, if at all, the student linked \
+#                   theoretical discussions to real world examples. Explain your thinking and feedback in detail.\
+#                    \nRender feedback as the <body> of an HTML page, and add html tags such as <h1>,  <h2>, <h3>, <p>, \
+#                    <ul>, <li>. Act as if we are already in the <body> section, so don't begin with <!DOCTYPE html>."
+#             },
+#             {
+#                 "role": "user",
+#                 "content": f"{scanned_texts}"
+#             },
+#         ],
+#         temperature=1,
+#         max_tokens=3500,
+#         top_p=1,
+#         frequency_penalty=0,
+#         presence_penalty=0
+#     )
+#
+#     assistant_reply = response['choices'][0]['message']['content']
+#     return assistant_reply
+
+def def_feedback(scanned_texts, essay_question):
     openai.api_key = os.environ.get('open_api_key')
 
 
@@ -153,31 +222,131 @@ def econ_feedback(scanned_texts, essay_question):
         messages=[
             {
                 "role": "system",
-                "content": f"You'll receive a text generated by an image-to-text app in response to the question \
-                '{essay_question}'. A good essay response should meet the characteristics below: Relevant economic\
-                 terms are clearly defined. Relevant economic theory is clearly explained and applied. \
-                 Where appropriate, diagrams are included and applied effectively. Where appropriate, examples are \
-                 used effectively. There are no significant errors. 'Economic terms' are microeconomic and \
-                 macroeconomic terms such as demand, supply, market equilibrium, aggregate demand, aggregate supply, \
-                 etc. \nEssay response: {scanned_texts} \nGive detailed feedback on: 1. How well relevant economics terms \
-                 are defined. Are any definitions unclear? \n2. How well are relevant economic theories explained. \n\
-                 3. How well the student utilised diagrams to support his essay. Since you are not able to draw diagrams, \
-                 describe the diagrams you would draw in brackets. \n4. How well, if at all, the student linked \
-                  theoretical discussions to real world examples. Explain your thinking and feedback in detail.\
-                   \nRender feedback as the <body> of an HTML page, and add html tags such as <h1>,  <h2>, <h3>, <p>, \
-                   <ul>, <li>. Act as if we are already in the <body> section, so don't begin with <!DOCTYPE html>."
+                "content": "You are a tutor specializing in high school economics. Please guide students to write better economic essays."
             },
             {
                 "role": "user",
-                "content": f"{scanned_texts}"
-            },
+                "content": f"Economic terms are terms that have technical definitions in the field of economics and are\
+                 usually rarely used in everyday language i.e. demand, supply, market equilibrium, aggregate demand, \
+                 aggregate supply, allocative efficiency, market power, etc.\
+                 \n\nIdentify all economic terms mentioned in this essay, check if each one is accurately defined. \
+                 Give feedback on the definitions of these economic terms and terms that should’ve been defined but weren't.\
+                 \n\nRender feedback as the <body> of an HTML page, act as if we are already in the <body> section, so don't begin with <!DOCTYPE html>, begin with <h1>Definitions Feedback</h1>.\
+                 \n\nFeedback for each economic term should look have a similar structure:\
+                 \n<h3>'Consumer Goods'</h3>\n<li><b>Essay’s definition:</b> Final products that serve for the consumer, such as clothes and computers.</li>\n<li><b>Issues with this definition:</b> The \
+                 definition is correct, but it could be more concise and could give a better understanding of the \
+                 nature and function of these goods in an economy.</li>\n<li><b>A better definition</b>: Consumer goods are \
+                 products bought and used by consumers for their personal use and satisfaction.</li>\n\n\
+                \n\nEssay question:{essay_question}\nEssay response:{scanned_texts}"
+            }
         ],
         temperature=1,
-        max_tokens=3500,
+        max_tokens=6016,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0
     )
 
+    assistant_reply = response['choices'][0]['message']['content']
+    return assistant_reply
+
+def explanation_feedback(scanned_texts, essay_question):
+    openai.api_key = os.environ.get('open_api_key')
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a tutor specializing in high school economics. Please guide students to write better economic essays."
+            },
+            {
+                "role": "user",
+                "content": f"Give detailed feedback on the economics exam response to the question: {essay_question}, by creating an outline of what you think is the ideal response to this question, contrast this outline with the outline of the essay to check. Output a table called Essay Outline, the left column is the outline of the essay, the right column is your ideal outline. After the table output, give detailed suggestions on key points that could be discussed further, or any structural changes that could improve the essay response. Render feedback as the <body> of an HTML page, don't begin with <!DOCTYPE html>, begin with <h1>Explanations Feedback</h1>. Output the table in html. Follow this structure:\n<h2>General Feedback</h2>\n<p>While your essay provides an overall good understanding of the concept of excess demand and how a decrease in supply leads to a new market equilibrium, there are certain elements that could be explained more thoroughly.</p>\n<ul>\n<li><strong>Contextual Introduction:</strong> Explaining the importance of excess demand, supply, and market equilibrium in economics sets a better context.</li>\n<li><strong>Detailed Impact Analysis:</strong> Expanding on the impact of a decrease in supply on the market, especially how different sectors respond, is beneficial.</li>\n<li><strong>Price Mechanism:</strong> A more detailed explanation of price changes in response to a shortage and how it balances supply and demand.</li>\n<li><strong>Real-life Example:</strong> Step-by-step analysis of a real-life example to demonstrate the concept's application in real-world contexts.</li>\n\nEssay response: {scanned_texts}"
+            }
+        ],
+        temperature=1,
+        max_tokens=6016,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    assistant_reply = response['choices'][0]['message']['content']
+    return assistant_reply
+
+def diagram_feedback(essay_outline, essay_question):
+    openai.api_key = os.environ.get('open_api_key')
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a tutor specializing in high school economics. Please guide students to write better economic essays."
+            },
+            {
+                "role": "user",
+                "content": f"Brainstorm economic diagrams that will help the reader's understanding of concepts in this high school level essay outline. The essay is written in response to the question: {essay_question} Try to minimise the number of diagrams, if multiple concepts can be illustrated using one diagram, don't draw a new diagram.\nFor every diagram, the output should follow the following structure:\nTitle:\nX-axis:\nY-axis:\nShapes and names of the curves on the diagram:\nPoints of interest on the diagram:\nAny shift of the curves: \n\n Render feedback as the <body> of an HTML page, begin with <h1>Diagrams Feedback</h1>. Add other html tags to format this output in a legible manner. Act as if we are already in the <body> section, so don't begin with <!DOCTYPE html>.\n\nEssay outline:{essay_outline}"
+
+
+            }
+        ],
+        temperature=1,
+        max_tokens=6016,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    assistant_reply = response['choices'][0]['message']['content']
+    return assistant_reply
+
+def example_feedback(scanned_texts):
+    openai.api_key = os.environ.get('open_api_key')
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a tutor specializing in high school economics. Please guide students to write better economic essays."
+            },
+            {
+                "role": "user",
+                "content": f"Identify all the real-world examples this essay response gives of economic theories. Check if each one is logical, if there are little to no problems, feedback is not necessary. After this, identify any concepts that could be better supported with concrete, real-world examples, along with those examples.\n\n Render feedback as the <body> of an HTML page, begin with <h1>Examples Feedback</h1>. Output the table in html. Add other html tags to format this output in a legible manner. Make sure there is a blank line between each economic term. Act as if we are already in the <body> section, so don't begin with <!DOCTYPE html>.\n\nEssay response: {scanned_texts}"
+
+
+
+            }
+        ],
+        temperature=1,
+        max_tokens=6016,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    assistant_reply = response['choices'][0]['message']['content']
+    return assistant_reply
+
+def extract_table_from_explanation_feedback(explanation_feedback):
+    openai.api_key = os.environ.get('open_api_key')
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-16k",
+        messages=[
+            {
+                "role": "user",
+                "content": f"Please extract the ideal column in the embedded table in this html page. Output the column as a list. Do not output anything else. {explanation_feedback}"
+
+            }
+        ],
+        temperature=1,
+        max_tokens=7000,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
     assistant_reply = response['choices'][0]['message']['content']
     return assistant_reply
