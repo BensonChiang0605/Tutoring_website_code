@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, MultipleFileField
+from wtforms import StringField, SubmitField, TextAreaField, MultipleFileField, SelectField
 from wtforms.validators import DataRequired, ValidationError
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
@@ -47,6 +47,10 @@ class PostForm(FlaskForm):
 
 class ScanImageForm(FlaskForm):
     prompt = TextAreaField('Enter the essay question', validators=[DataRequired()])
+    # question_type = SelectField('Select question type',
+    #     choices=[('part_a', 'Part A'), ('part_b', 'Part B')],
+    #     validators=[DataRequired()]
+    # )
     picture = MultipleFileField('Wrote your essay on paper? Upload the jpg or png images of your written essay:',
                                 validators=[FileAllowed(['jpg', 'png']), validate_either_or])
     essay_response = TextAreaField('Enter the essay response', validators=[validate_either_or])

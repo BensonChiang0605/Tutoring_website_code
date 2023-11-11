@@ -65,6 +65,7 @@ def submit_essay():
     form = ScanImageForm()
     if form.validate_on_submit():
         scanned_texts = []  # Store scanned texts for all uploaded files
+        # question_type = form.question_type.data         #CONTINUE WORKING HERE
         if is_empty_field(form.picture.data):
             spell_checked_essay = form.essay_response.data
 
@@ -80,8 +81,7 @@ def submit_essay():
 
         # load grammar feedback to of this post into the this post model
         explanation = explanation_feedback(spell_checked_essay, form.prompt)
-        post = Post(title=f"{current_user.username} response to '{form.prompt.data}'",\
-                    content=spell_checked_essay, author=current_user, grammar_feedback=gpt_grammar_feedback(spell_checked_essay),\
+        post = Post(title=form.prompt.data,content=spell_checked_essay, author=current_user, grammar_feedback=gpt_grammar_feedback(spell_checked_essay),\
                     econ_feedback=def_feedback(spell_checked_essay, form.prompt) + explanation + diagram_feedback(extract_table_from_explanation_feedback(explanation), form.prompt) + example_feedback(spell_checked_essay)) # plus other section feedbacks, add later
         db.session.add(post)
         db.session.commit()

@@ -14,6 +14,21 @@
           </div>
         </article>
     {% endfor %}
+
+    <table border="1">
+    <!-- Table Header -->
+    <tr>
+        <th>Essay Question</th>
+        <th>Question Type</th>
+        <th>Score</th>
+        <th>Year of Examination</th>
+    </tr>
+    {% for post in posts.items %}
+        <tr>
+            <td>{{post.title}}</td>
+        </tr>
+    {% endfor %}
+
     {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
             {% if posts.page == page_num %}
