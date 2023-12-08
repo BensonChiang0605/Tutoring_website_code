@@ -126,13 +126,3 @@ td {
 tr:hover {
     background-color: #444; /* Slightly lighter when hovered */
 }
-
-.dropdown-content {
-    display: none;
-    border: 1px solid #ddd;
-    padding: 10px;
-}
-
-.dropdown-content p {
-    margin: 0;
-}

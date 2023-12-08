@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from main import db
 from main.models import Post
 from main.posts.forms import PostForm, ScanImageForm, is_empty_field
-from main.posts.utils import scan_image, correct_spelling, tag_english_essay, filler_feedback
+from main.posts.utils import scan_image, gpt_grammar_feedback, correct_spelling, add_span_tags_to_text, def_feedback, explanation_feedback, diagram_feedback, extract_table_from_explanation_feedback, example_feedback
 from main.users.utils import save_picture
 import json
 
@@ -78,12 +78,11 @@ def submit_essay():
                     scanned_text = scan_image(file_content)
                     scanned_texts.append(scanned_text)
             spell_checked_essay = correct_spelling(''.join(scanned_texts), form.prompt)
-            # we cannot fix up spelling for them all the time
 
-        annotated_essay = tag_english_essay(spell_checked_essay, form.prompt)
-        filler_feedback = filler_feedback(annotated_essay)
-        post = Post(title=form.prompt.data, content=spell_checked_essay, author=current_user, grammar_feedback=annotated_essay + filler_feedback,\
-                    econ_feedback=None) # plus other section feedbacks, add later
+        # load grammar feedback to of this post into the this post model
+        explanation = explanation_feedback(spell_checked_essay, form.prompt)
+        post = Post(title=form.prompt.data,content=spell_checked_essay, author=current_user, grammar_feedback=gpt_grammar_feedback(spell_checked_essay),\
+                    econ_feedback=def_feedback(spell_checked_essay, form.prompt) + explanation + diagram_feedback(extract_table_from_explanation_feedback(explanation), form.prompt) + example_feedback(spell_checked_essay)) # plus other section feedbacks, add later
         db.session.add(post)
         db.session.commit()
         flash('Post created!', 'success')
@@ -99,19 +98,12 @@ def prototype_homepage():
 @posts.route("/grammar_feedback/<int:post_id>", methods=['GET', 'POST'])
 def grammar_feedback(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template('grammar_feedback.html', title='Grammar Feedback', post=post, feedback=post.grammar_feedback) # feedback is annotated essay + filler feedback + awkward words feedback
+    json_data = json.loads(post.grammar_feedback)
+    highlightable_essay = add_span_tags_to_text(post.content, list(json_data["original_sentences"]))
+    return render_template('grammar_feedback.html', title='Grammar Feedback', post=post, highlightable_essay=highlightable_essay, revised_sentences=json_data["revised_sentences"],\
+                           problem_summaries=json_data["problem_summaries"], explanations=json_data["explanations"],original_sentences=json_data["original_sentences"])
 
 @posts.route("/econ_feedback/<int:post_id>", methods=['GET', 'POST'])
 def econ_feedback_page(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('econ_feedback.html', title='Econ Feedback', post=post, econ_feedback=post.econ_feedback)
-
-# Creating a route to handle a webpage where users/moderators can change the content of GPT feedback
-# @app.route("/econ_feedback/<int:post_id>/edit", methods=['GET', 'POST'])
-# def handle_html_submission(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     econ_feedback = post.econ_feedback
-#
-#     # Sanitize and process the HTML content
-#     # ...
-#     return 'HTML content received and processed!'
