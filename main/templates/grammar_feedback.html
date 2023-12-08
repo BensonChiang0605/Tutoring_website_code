@@ -2,10 +2,33 @@
 {% block content %}
 
   <style>
-  /* Define CSS styles for highlighted text */
-  .highlight {
-    background-color: #C19332;
-  }
+    /* Define CSS styles for highlighted text */
+    .highlight {
+      background-color: #C19332;
+    }
+    .strikethrough {
+              text-decoration: line-through;
+    }
+
+    .highlight {
+        background-color: yellow;
+        .dropdown-content {
+            display: none;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+    }
+
+    .dropdown-content p {
+        margin: 0;
+        padding-left: 25px;
+        /* Add padding for indentation */
+    }
+
+    .dropdown-content {
+        display: none;
+        /* Other styling */
+    }
   </style>
 
   <article class="media content-section" style="background-color: #121212; color: #ffffff;">
@@ -25,18 +48,7 @@
 
 
       <h2 class="article-title">{{ post.title }}</h2>
-      {{ highlightable_essay | safe }}
-
-      <h2>Feedbacks</h2>
-      {% for problem in problem_summaries %}
-        <button class="toggle-button" onclick='toggleHighlight("problem-{{ loop.index }}")'>{{problem}}</button>
-        <br>
-        <p> <em>Revised: "{{ revised_sentences[loop.index0] }}"</em> </p>
-        <p>Explanation: {{ explanations[loop.index0] }}</p>
-        <br>
-      {% endfor %}
-    </div>
-  </article>
+      {{ feedback | safe }}
 
 
   <!-- Modal -->
@@ -63,12 +75,28 @@
   </div>
 
 <script>
-  function toggleHighlight(problemId) {
-    var problemElement = document.getElementById(problemId);
-    if (problemElement) {
-      problemElement.classList.toggle("highlight");
+    function toggleDropdown() {
+    var content = document.getElementById("dropdownContent");
+    if (content.style.display === "block") {
+        content.style.display = "none";
+    } else {
+        content.style.display = "block";
     }
-  }
+    }
+
+    function strikeThroughFiller() {
+      var elements = document.querySelectorAll('span[id="filler"]');
+        elements.forEach(function(element) {
+          element.classList.toggle('strikethrough');
+        });
+    }
+
+    function highlightAwkward() {
+    var elements = document.querySelectorAll('span[id="awkward"]');
+      elements.forEach(function(element) {
+      element.classList.toggle('highlight');
+      });
+    }
 </script>
 
 {% endblock content %}

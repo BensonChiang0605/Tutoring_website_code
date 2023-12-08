@@ -2,11 +2,13 @@ import json
 import requests
 import os
 import openai
+from openai import OpenAI
 import re
 import base64
 from requests.exceptions import RequestException, HTTPError, ConnectionError, Timeout
 from dotenv import load_dotenv
 load_dotenv()
+client = OpenAI(api_key=os.environ.get('open_api_key'))
 
 
 def scan_image(file_content):
@@ -249,23 +251,31 @@ def def_feedback(scanned_texts, essay_question):
     assistant_reply = response['choices'][0]['message']['content']
     return assistant_reply
 
-def explanation_feedback(scanned_texts, essay_question):
+def tag_english_essay(scanned_texts, essay_question):
     openai.api_key = os.environ.get('open_api_key')
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo-1106",
         messages=[
             {
                 "role": "system",
-                "content": "You are a tutor specializing in high school economics. Please guide students to write better economic essays."
+                "content": "You are fluent in both english and traditional chinese, and have ten year experience teaching english essay writing to native chinese speakers in Taiwan. You aim to improve the written coherence of students by pointing out things such as filler words, inappropriate word choices, and grammar mistakes."
             },
             {
                 "role": "user",
-                "content": f"Give detailed feedback on the economics exam response to the question: {essay_question}, by creating an outline of what you think is the ideal response to this question, contrast this outline with the outline of the essay to check. Output a table called Essay Outline, the left column is the outline of the essay, the right column is your ideal outline. After the table output, give detailed suggestions on key points that could be discussed further, or any structural changes that could improve the essay response. Render feedback as the <body> of an HTML page, don't begin with <!DOCTYPE html>, begin with <h1>Explanations Feedback</h1>. Output the table in html. Follow this structure:\n<h2>General Feedback</h2>\n<p>While your essay provides an overall good understanding of the concept of excess demand and how a decrease in supply leads to a new market equilibrium, there are certain elements that could be explained more thoroughly.</p>\n<ul>\n<li><strong>Contextual Introduction:</strong> Explaining the importance of excess demand, supply, and market equilibrium in economics sets a better context.</li>\n<li><strong>Detailed Impact Analysis:</strong> Expanding on the impact of a decrease in supply on the market, especially how different sectors respond, is beneficial.</li>\n<li><strong>Price Mechanism:</strong> A more detailed explanation of price changes in response to a shortage and how it balances supply and demand.</li>\n<li><strong>Real-life Example:</strong> Step-by-step analysis of a real-life example to demonstrate the concept's application in real-world contexts.</li>\n\nEssay response: {scanned_texts}"
+                "content": "Read through the following text carefully sentence by sentence, look to identify filler words, misspelt words, and grammar mistakes.\n\nFiller words are typically unnecessary words or phrases that don't add significant meaning or value to the sentence.\n\nA word choice is considered awkward when its meaning and connotation does not fit the context, and is usually not used in that specific context. However, it is not a strict grammar violation.\n\nplease add a html span tag with a id of “filler” to every filler word, a html span tag with a id of “misspelt” to words that are misspelt in this text, and a html span tag with a id of “awkward” to every awkward word choice in the text delimited by triple back ticks.\n\n```Seeing from the two pictures, we can discover the different features these two parks have. From scratch, we can see numerous amusement facilities shown by the picture A. Definitely, those facilities are the main characterist of that park. With a wide playground and considerable entertainment, I believe that there are always lots of kids attracted to play in that park every day. As for picture B, it indicates the tranquil atmosphere in that park. Substantial trees create a unique landscape in that park. Frankly speaking, I can even feel the wind blowing by my skin and the leaves rustling under sunshine as if I were jogging in that park. It is the distinctive lush plants that set that park apart.```"
+            },
+            {
+                "role": "assistant",
+                "content": "<span id=\"filler\">Seeing</span> from the two pictures, we <span id=“filler”>can</span> <span id=\"awkward\">discover</span> the different features these two parks have. <span id=\"awkward\">From scratch</span>,we can see numerous amusement facilities shown\nby the picture A. <span id=\"filler\">Definitely</span>, those facilities are the main <span id=\"misspelt\">characterist</span> of that park. With a <span id=\"awkward\">wide</span> playground and <span id=\"awkward\">considerable</span> entertainment,\n<span id=\"filler\">I believe that</span> there are <span id=\"filler\">always</span> lots of kids <span id=\"awkward\">attracted</span> to play in that park every day. As for picture B, it indicates the tranquil atmosphere in that park. <span id=\"awkward\">Substantial</span>trees\ncreate a unique landscape in that park. <span id=\"filler\">Frankly speaking</span>, I can <span id=\"filler\">even</span> feel the wind blowing by my skin and the leaves rustling <span id=\"awkward\">under sunshine</span> as if I were jogging in that park.\nIt is the <span id=\"awkward\">distinctive lush</span> plants that set that park apart.<br><br>"
+            },
+            {
+                "role": "user",
+                "content":f"```{scanned_texts}```"
             }
         ],
         temperature=1,
-        max_tokens=6016,
+        max_tokens=4096,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0
@@ -273,6 +283,39 @@ def explanation_feedback(scanned_texts, essay_question):
 
     assistant_reply = response['choices'][0]['message']['content']
     return assistant_reply
+
+def filler_feedback(annotated_text):
+    openai.api_key = os.environ.get('open_api_key')
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo-1106",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are fluent in both english and traditional chinese, and have ten year experience teaching english essay writing to native chinese speakers in Taiwan. You aim to improve the written coherence of students by pointing out things such as filler words, inappropriate word choices, and grammar mistakes."
+            },
+            {
+                "role": "user",
+                "content": "Filler words are tagged like so in the text delimited by three back ticks: <span id=\"filler\">{filler word}</span>\n\n```<span id=\"filler\">Seeing</span> from the two pictures, we <span id=\"filler\">can</span> <span id=\"awkward\">discover</span> the different features these two parks have. <span id=\"awkward\">From scratch</span>,we can see numerous amusement facilities shown\nby the picture A. <span id=\"filler\">Definitely</span>, those facilities are the main <span id=\"misspelt\">characterist</span> of that park. With a <span id=\"awkward\">wide</span> playground and <span id=\"awkward\">considerable</span> entertainment,\n<span id=\"filler\">I believe that</span> there are <span id=\"filler\">always</span> lots of kids <span id=\"awkward\">attracted</span> to play in that park every day. As for picture B, it indicates the tranquil atmosphere in that park. <span id=\"awkward\">Substantial</span>trees\ncreate a unique landscape in that park. <span id=\"filler\">Frankly speaking</span>, I can <span id=\"filler\">even</span> feel the wind blowing by my skin and the leaves rustling <span id=\"awkward\">under sunshine</span> as if I were jogging in that park.\nIt is the <span id=\"awkward\">distinctive lush</span> plants that set that park apart.<br><br>```\n\nIdentify every tagged filler word in the text and provide further feedback in traditional chinese following the structure below:\n\n<h2><button onclick=\"strikeThroughFiller()\">填充詞</button></h2>\n\n<b>{Filler word 1}</b>: {why it is a filler word, should it be deleted or replaced by another word.}<br><br>\n\n<b>{Filler word 2}</b>: {why it is a filler word, should it be deleted or replaced by another word.}<br><br>\n...\n"
+            },
+            {
+                "role": "assistant",
+                "content": "<h2><button onclick=\"strikeThroughFiller()\">填充詞</button></h2>\n<b>\"Seeing from\"</b>: 此短語不必要，且不增加有意義的內容。去除後不會改變句子的意思。<br><br>\n\n<b>\"can\"</b>：雖然表達了一種能力，但在這個語境中，它實際上並不增加額外的意義。\"We discover the...\" 已經足夠表達發現或觀察到某事的意思。<br><br>\n\n<b>\"Definitely\"</b>: 這個副詞被用作填充詞，不增加任何價值。省略後不會損失任何意義。<br><br>\n\n<b>\"I believe\"</b>：這個短語通常用來表達作者的看法或信念，但在很多情況下，它並不會增加額外的信息或強調。特別是當上下文已清晰表達了這是作者的觀點時，\"I believe\" 可能會顯得多餘。<br><br>\n\n<b>\"always\"</b>：在某些情況下，\"always\" 可用來強調一個經常發生的情況或行為。然而，在不少情況下，它僅僅用來加強語氣，而不是提供具體的信息。若去除 \"always\"，句子的基本意義通常不會改變，特別是當這種頻繁發生的狀態已由上下文清楚表達時。<br><br>\n\n<b>\"Frankly speaking\"</b>: 此短語是填充詞，可以省略而不影響整體訊息。<br><br>\n\n<b>\"even\"</b>：這個詞在這裡是用來強調的，但其實並不增加額外的意義。句子中已經有足夠的描述來表達作者強烈的感受和鮮明的景象。如果去除\"even\"，句子的基本意思和強調的程度不會有太大變化。<br><br>"
+            },
+            {
+                "role": "user",
+                "content": f"```{annotated_text}```"
+            }
+        ],
+        temperature=1,
+        max_tokens=4075,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    assistant_reply = response['choices'][0]['message']['content']
+    return assistant_reply
+
 
 def diagram_feedback(essay_outline, essay_question):
     openai.api_key = os.environ.get('open_api_key')
